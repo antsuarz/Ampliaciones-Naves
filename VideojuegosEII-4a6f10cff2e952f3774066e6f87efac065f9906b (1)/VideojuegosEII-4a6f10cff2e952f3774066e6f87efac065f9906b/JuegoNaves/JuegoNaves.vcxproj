@@ -161,6 +161,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PowerUpBullet.cpp" />
+    <ClCompile Include="PowerUpLife.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Text.cpp" />
   </ItemGroup>
@@ -174,8 +175,12 @@
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PowerUpBullet.h" />
+    <ClInclude Include="PowerUpLife.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Text.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="JuegoNaves.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

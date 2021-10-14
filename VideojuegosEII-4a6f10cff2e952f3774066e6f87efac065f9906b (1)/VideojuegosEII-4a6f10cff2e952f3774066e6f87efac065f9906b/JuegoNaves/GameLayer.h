@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "Projectile.h"
 #include "PowerUpBullet.h"
+#include "PowerUpLife.h"
 #include "Text.h"
 
 #include <list>
@@ -22,7 +23,8 @@ public:
 	void actualizarDisparos();
 	void keysToControls(SDL_Event event);
 	int newEnemyTime = 0;
-	int newBulletTime = 500;
+	int newBulletTime = 200;
+	int newLifeTime = 500;
 	Text* textPoints;
 	Text* textLifes;
 	Text* textInvulnerable;
@@ -41,6 +43,7 @@ public:
 
 	list<Enemy*> enemies;
 	list<PowerUpBullet*> powerUpBullets;
+	list<PowerUpLife*> powerUpLifes;
 	list<Projectile*> projectiles;
 
 };

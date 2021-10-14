@@ -179,7 +179,16 @@ void GameLayer::update() {
 		float y = (rand() % 240);
 		if(powerUpBullets.size() < 1)
 			powerUpBullets.push_back(new PowerUpBullet(x, y, game));
-		newBulletTime = 500;
+		newBulletTime = 200;
+	}
+
+	newLifeTime--;
+	if (newLifeTime == 0) {
+		float x = (rand() % 100) + 300;
+		float y = (rand() % 240);
+		if (powerUpLifes.size() < 1)
+			powerUpLifes.push_back(new PowerUpLife(x, y, game));
+		newLifeTime = 500;
 	}
 	player->update();
 	for (auto const& enemy : enemies) {
@@ -206,6 +215,15 @@ void GameLayer::update() {
 			player->addShots(10);
 			actualizarDisparos();
 			powerUpBullets.clear();
+			return;
+		}
+	}
+
+	for (auto const& pu : powerUpLifes) {
+		if (player->isOverlap(pu)) {
+			player->addLifes(1);
+			textLifes->content = to_string(player->lifes);
+			powerUpLifes.clear();
 			return;
 		}
 	}
@@ -287,6 +305,11 @@ void GameLayer::draw() {
 	for (auto const& pu : powerUpBullets) {
 		pu->draw();
 	}
+
+	for (auto const& pu : powerUpLifes) {
+		pu->draw();
+	}
+
 	if(player-> invulTime != 0)
 		textInvulnerable->draw(0, 255, 0, 255);
 	textPoints->draw(255,233,0,255);

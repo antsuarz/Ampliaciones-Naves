@@ -19,6 +19,7 @@ public:
 	int invulTime = 0;
 	void loseLife();
 	void addShots(int s);
+	void addLifes(int s);
 
 	enum class Tipo {ROJO, VERDE};
 	Tipo tipo;

@@ -76,3 +76,7 @@ void Player::addShots(int s) {
 	shots += s;
 }
 
+void Player::addLifes(int s) {
+	lifes += s;
+}
+

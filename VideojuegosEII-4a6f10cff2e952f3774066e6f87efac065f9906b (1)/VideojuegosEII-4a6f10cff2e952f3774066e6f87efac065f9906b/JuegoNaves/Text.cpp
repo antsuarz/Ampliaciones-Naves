@@ -5,13 +5,13 @@ Text::Text(string content, float x, float y, Game* game)
 {
 }
 
-void Text::draw() {
-	//inicializar el color a amarillo (jeje) 
+
+void Text::draw(int r, int g, int b, int a) { 
 	SDL_Color color;
-	color.r = 255;
-	color.g = 233;
-	color.b = 0;
-	color.a = 255; //transparente
+	color.r = r;
+	color.g = g;
+	color.b = b;
+	color.a = a; //250 == transparente
 
 	SDL_Surface* surface = TTF_RenderText_Blended(game->font, content.c_str(), color);
 	// c_str() transforma el string a cost *char;

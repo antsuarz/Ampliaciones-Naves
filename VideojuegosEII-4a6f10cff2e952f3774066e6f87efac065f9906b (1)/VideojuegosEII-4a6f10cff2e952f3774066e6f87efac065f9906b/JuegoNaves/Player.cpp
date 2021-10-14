@@ -3,6 +3,7 @@
 Player::Player(float x, float y, Game* game)
 	: Actor("res/jugador.png", x, y, 50, 57, game) {
 	tipo = Tipo::ROJO;
+	estado = State::ALIVE;
 }
 
 Player::Player(string fichero, float x, float y, Game* game)
@@ -11,9 +12,14 @@ Player::Player(string fichero, float x, float y, Game* game)
 		tipo = Tipo::ROJO;
 	else
 		tipo = Tipo::VERDE;
+	estado = State::ALIVE;
 }
 
 void Player::update() {
+	if (invulTime > 0) {
+		invulTime--;
+	}
+
 	if (shootTime > 0) {
 		shootTime--;
 	}
@@ -48,5 +54,16 @@ Projectile* Player::shoot() {
 		return NULL;
 	}
 
+}
+
+void Player::loseLife() {
+	if (invulTime > 0 || lifes <= 0) {
+		return;
+	}
+	lifes--;
+	invulTime = 100;
+	if (lifes == 0) {
+		estado = State::DEAD;
+	}
 }
 

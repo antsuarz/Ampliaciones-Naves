@@ -14,7 +14,12 @@ public:
 	Projectile* shoot();
 	int shootCadence = 30;
 	int shootTime = 0;
+	int lifes = 3;
+	int invulTime = 0;
+	void loseLife();
 	enum class Tipo {ROJO, VERDE};
 	Tipo tipo;
+	enum class State {ALIVE, DEAD};
+	State estado;
 };
 

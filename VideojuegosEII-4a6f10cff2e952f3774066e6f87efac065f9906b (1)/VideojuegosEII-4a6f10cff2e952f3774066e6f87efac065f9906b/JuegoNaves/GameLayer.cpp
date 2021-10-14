@@ -3,19 +3,27 @@
 GameLayer::GameLayer(Game* game)
 	: Layer(game) {
 	//llama al constructor del padre : Layer(renderer)
-	player = new Player(50, 50, game);
 	init();
 }
 
 void GameLayer::init() {
 	points = 0;
+	
+	player = new Player(50, 100, game);
 	textPoints = new Text("0", WIDTH * 0.92, HEIGHT * 0.05, game);
 	textPoints->content = to_string(points);
+
+	textLifes = new Text("0", WIDTH * 0.07, HEIGHT * 0.1, game);
+	textLifes->content = to_string(player->lifes);
+
+	textInvulnerable = new Text("Invulnerable", WIDTH * 0.30, HEIGHT * 0.1, game); 
 
 	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	//Laposición es relativa a la pantalla, en este caso el 85% del aancho y el 5% del alto
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
+	backgroundLifes = new Actor("res/corazon.png",
+		WIDTH * 0.07, HEIGHT * 0.1, 50, 40, game);
 
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
 	enemies.clear(); // Vaciar por si reiniciamos el juego
@@ -155,11 +163,18 @@ void GameLayer::update() {
 	for (auto const& enemy : enemies) {
 		enemy->update();
 	}
-
+	
 	// Colisiones
 	for (auto const& enemy : enemies) {
 		if (player->isOverlap(enemy)) {
-			init();
+			player->loseLife();
+			textLifes->content = to_string(player->lifes);
+
+			if(player -> invulTime == 100)
+				enemies.remove(enemy);
+			draw();
+			if (player->estado == Player::State::DEAD)
+				init();
 			return; // Cortar el for
 		}
 	}
@@ -236,8 +251,13 @@ void GameLayer::draw() {
 	for (auto const& enemy : enemies) {
 		enemy->draw();
 	}
-	textPoints->draw();
+	if(player-> invulTime != 0)
+		textInvulnerable->draw(0, 255, 0, 255);
+	textPoints->draw(255,233,0,255);
 	backgroundPoints->draw();
+	backgroundLifes->draw();
+	textLifes->draw(255,255,255,255);
+	
 	
 	SDL_RenderPresent(game->renderer); // Renderiza
 }

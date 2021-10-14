@@ -21,12 +21,15 @@ public:
 	void keysToControls(SDL_Event event);
 	int newEnemyTime = 0;
 	Text* textPoints;
+	Text* textLifes;
+	Text* textInvulnerable;
 	int points;
-
+	int lifes;
 
 	Player* player;
 	Background* background;
 	Actor* backgroundPoints;
+	Actor* backgroundLifes;
 	bool controlShoot = false;
 	int controlMoveY = 0;
 	int controlMoveX = 0;

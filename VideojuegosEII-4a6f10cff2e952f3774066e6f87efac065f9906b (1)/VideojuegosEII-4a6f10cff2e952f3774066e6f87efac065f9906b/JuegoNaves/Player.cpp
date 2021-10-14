@@ -44,11 +44,16 @@ void Player::moveY(float axis) {
 
 Projectile* Player::shoot() {
 	if (shootTime == 0) {
-		if(tipo == Tipo::ROJO)
+		if (tipo == Tipo::ROJO)
 			shootTime = shootCadence;
 		else
 			shootTime = 15;
-		return new Projectile(x, y, game);
+		if (shots > 0) {
+			shots--;
+			return new Projectile(x, y, game);
+		}
+		else
+			return NULL;
 	}
 	else {
 		return NULL;
@@ -65,5 +70,9 @@ void Player::loseLife() {
 	if (lifes == 0) {
 		estado = State::DEAD;
 	}
+}
+
+void Player::addShots(int s) {
+	shots += s;
 }
 

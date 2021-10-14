@@ -13,6 +13,9 @@ void GameLayer::init() {
 	textPoints = new Text("0", WIDTH * 0.92, HEIGHT * 0.05, game);
 	textPoints->content = to_string(points);
 
+	textShots = new Text("0", WIDTH * 0.15, HEIGHT * 0.9, game);
+	textShots->content = to_string(player-> shots);
+
 	textLifes = new Text("0", WIDTH * 0.07, HEIGHT * 0.1, game);
 	textLifes->content = to_string(player->lifes);
 
@@ -24,6 +27,8 @@ void GameLayer::init() {
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
 	backgroundLifes = new Actor("res/corazon.png",
 		WIDTH * 0.07, HEIGHT * 0.1, 50, 40, game);
+	backgroundShots = new Actor("res/power-up_UI.png",
+		WIDTH * 0.05, HEIGHT * 0.9, 16, 41, game);
 
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
 	enemies.clear(); // Vaciar por si reiniciamos el juego
@@ -42,6 +47,8 @@ void GameLayer::processControls() {
 	// Disparar
 	if (controlShoot) {
 		Projectile* newProjectile = player->shoot();
+		actualizarDisparos();
+		
 		if (newProjectile != NULL) {
 			projectiles.push_back(newProjectile);
 		}
@@ -82,6 +89,8 @@ void GameLayer::keysToControls(SDL_Event event) {
 		int code = event.key.keysym.sym;
 		float posx = player->x;
 		float posy = player->y;
+		int l = player->lifes;
+		int s = player->shots;
 		// Pulsada
 		switch (code) {
 		case SDLK_ESCAPE:
@@ -92,9 +101,13 @@ void GameLayer::keysToControls(SDL_Event event) {
 			break;
 		case SDLK_1:
 			player = new Player("res/jugador.png", posx, posy, game);
+			player->shots = s;
+			player->lifes = l;
 			break;
 		case SDLK_2:
 			player = new Player("res/jugador-verde.png", posx, posy, game);
+			player->shots = s;
+			player->lifes = l;
 			break;
 		case SDLK_d: // derecha
 			controlMoveX = 1;
@@ -159,6 +172,15 @@ void GameLayer::update() {
 		newEnemyTime = 110;
 	}
 
+	// Generar powerUp
+	newBulletTime--;
+	if (newBulletTime == 0) {
+		float x = (rand() % 100) + 300;
+		float y = (rand() % 240);
+		if(powerUpBullets.size() < 1)
+			powerUpBullets.push_back(new PowerUpBullet(x, y, game));
+		newBulletTime = 500;
+	}
 	player->update();
 	for (auto const& enemy : enemies) {
 		enemy->update();
@@ -179,6 +201,14 @@ void GameLayer::update() {
 		}
 	}
 
+	for (auto const& pu : powerUpBullets) {
+		if (player->isOverlap(pu)) {
+			player->addShots(10);
+			actualizarDisparos();
+			powerUpBullets.clear();
+			return;
+		}
+	}
 	for (auto const& projectile : projectiles) {
 		projectile->update();
 	}
@@ -205,6 +235,8 @@ void GameLayer::update() {
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
 			if (enemy->isOverlap(projectile)) {
+				player->addShots(1);
+				actualizarDisparos();
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end();
@@ -251,13 +283,24 @@ void GameLayer::draw() {
 	for (auto const& enemy : enemies) {
 		enemy->draw();
 	}
+
+	for (auto const& pu : powerUpBullets) {
+		pu->draw();
+	}
 	if(player-> invulTime != 0)
 		textInvulnerable->draw(0, 255, 0, 255);
 	textPoints->draw(255,233,0,255);
 	backgroundPoints->draw();
+
 	backgroundLifes->draw();
 	textLifes->draw(255,255,255,255);
-	
+
+	backgroundShots->draw();
+	textShots->draw(227, 255, 0, 255);
 	
 	SDL_RenderPresent(game->renderer); // Renderiza
+}
+
+void GameLayer::actualizarDisparos() {
+	textShots->content = to_string(player->shots);
 }

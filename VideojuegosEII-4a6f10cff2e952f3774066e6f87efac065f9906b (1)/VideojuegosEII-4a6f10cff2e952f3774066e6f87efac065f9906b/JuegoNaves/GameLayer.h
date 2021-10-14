@@ -5,6 +5,7 @@
 #include "Background.h"
 #include "Enemy.h"
 #include "Projectile.h"
+#include "PowerUpBullet.h"
 #include "Text.h"
 
 #include <list>
@@ -18,11 +19,14 @@ public:
 	void processControls() override;
 	void update() override;
 	void draw() override;
+	void actualizarDisparos();
 	void keysToControls(SDL_Event event);
 	int newEnemyTime = 0;
+	int newBulletTime = 500;
 	Text* textPoints;
 	Text* textLifes;
 	Text* textInvulnerable;
+	Text* textShots;
 	int points;
 	int lifes;
 
@@ -30,11 +34,13 @@ public:
 	Background* background;
 	Actor* backgroundPoints;
 	Actor* backgroundLifes;
+	Actor* backgroundShots;
 	bool controlShoot = false;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
 
 	list<Enemy*> enemies;
+	list<PowerUpBullet*> powerUpBullets;
 	list<Projectile*> projectiles;
 
 };

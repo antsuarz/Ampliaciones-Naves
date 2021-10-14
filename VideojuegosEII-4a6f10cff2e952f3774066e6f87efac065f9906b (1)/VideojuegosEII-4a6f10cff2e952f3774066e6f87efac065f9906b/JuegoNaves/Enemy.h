@@ -12,5 +12,6 @@ public:
 	Animation* aMoving;
 	Animation* animation; // Referencia a la animación mostrada
 
+	int lifes = 3;
 };
 

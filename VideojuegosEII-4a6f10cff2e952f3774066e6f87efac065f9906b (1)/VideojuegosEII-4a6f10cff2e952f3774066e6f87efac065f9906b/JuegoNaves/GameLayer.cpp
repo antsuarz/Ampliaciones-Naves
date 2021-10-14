@@ -253,8 +253,7 @@ void GameLayer::update() {
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
 			if (enemy->isOverlap(projectile)) {
-				player->addShots(1);
-				actualizarDisparos();
+				
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end();
@@ -262,17 +261,21 @@ void GameLayer::update() {
 				if (!pInList) {
 					deleteProjectiles.push_back(projectile);
 				}
+				if (enemy->lifes == 1) {
+					player->addShots(1);
+					actualizarDisparos();
+					bool eInList = std::find(deleteEnemies.begin(),
+						deleteEnemies.end(),
+						enemy) != deleteEnemies.end();
 
-				bool eInList = std::find(deleteEnemies.begin(),
-					deleteEnemies.end(),
-					enemy) != deleteEnemies.end();
-
-				if (!eInList) {
-					deleteEnemies.push_back(enemy);
-					points++;
-					textPoints->content = to_string(points);
+					if (!eInList) {
+						deleteEnemies.push_back(enemy);
+						points++;
+						textPoints->content = to_string(points);
+					}
 				}
-				
+				else
+					enemy->lifes -= 1;
 			}
 		}
 	}
@@ -291,6 +294,15 @@ void GameLayer::update() {
 void GameLayer::draw() {
 	background->draw();
 
+
+	for (auto const& pu : powerUpBullets) {
+		pu->draw();
+	}
+
+	for (auto const& pu : powerUpLifes) {
+		pu->draw();
+	}
+
 	for (auto const& projectile : projectiles) {
 		projectile->draw();
 	}
@@ -300,14 +312,6 @@ void GameLayer::draw() {
 
 	for (auto const& enemy : enemies) {
 		enemy->draw();
-	}
-
-	for (auto const& pu : powerUpBullets) {
-		pu->draw();
-	}
-
-	for (auto const& pu : powerUpLifes) {
-		pu->draw();
 	}
 
 	if(player-> invulTime != 0)
